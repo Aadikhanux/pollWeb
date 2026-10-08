@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .glassmorphic {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl;
+  }
+  
+  .threat-card {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-lg relative overflow-hidden;
+  }
+  
+  .scan-line {
+    @apply relative overflow-hidden pointer-events-none;
+  }
+  
+  .scan-line::before {
+    content: '';
+    @apply absolute inset-0 w-full h-[2px] bg-white/10 z-50 pointer-events-none;
+    animation: scan-line 3s linear infinite;
+  }
+  
+  .glow-green {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+  }
+  
+  .glow-red {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+  }
+  
+  .stat-number {
+    @apply text-3xl font-bold font-mono tabular-nums tracking-tight;
+  }
+  
+  .severity-critical {
+    @apply bg-soc-danger/20 text-soc-danger border border-soc-danger/30 animate-threat-pulse;
+  }
+  
+  .severity-high {
+    @apply bg-soc-warning/20 text-soc-warning border border-soc-warning/30;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-soc-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-soc-accent/50 rounded-full hover:bg-soc-accent/80 transition-colors;
+}
