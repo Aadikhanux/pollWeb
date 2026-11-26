@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PollWave — Live Polls & Q&A for Online Meetings</title>
+  <meta name="description" content="Engage your audience with real-time polls, Q&A, and quizzes during online meetings. Create a session in seconds and share your room code." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Background Decorations -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- ===================================================
+     LANDING VIEW
+     =================================================== -->
+<div id="landing-view" class="view active">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <img src="logo.png" alt="PollWave logo" class="nav-logo" />
+      PollWave
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" id="nav-join-btn">Join Session</button>
+      <button class="btn btn-primary btn-sm" id="nav-create-btn">Create Session</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Real-time audience engagement
+    </div>
+    <h1 class="hero-title">
+      Engage your audience<br />
+      <span class="grad">live, right now.</span>
+    </h1>
+    <p class="hero-subtitle">
+      Create instant polls, Q&amp;A sessions, and quizzes during your online meeting. No sign-up needed — just share a room code.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg" id="hero-create-btn">
+        🚀 Start a Session
+      </button>
+      <button class="btn btn-secondary btn-lg" id="hero-join-btn">
+        🔗 Join a Session
+      </button>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <h2 class="section-title">Everything you need</h2>
+    <p class="section-subtitle">Powerful tools to keep your audience engaged and your meetings interactive.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(139,92,246,0.15);">📊</div>
+        <div class="feature-title">Live Polls</div>
+        <div class="feature-desc">Create multiple-choice polls with instant animated results as your audience votes in real time.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(59,130,246,0.15);">💬</div>
+        <div class="feature-title">Q&amp;A with Upvoting</div>
+        <div class="feature-desc">Audience submits questions anonymously. The best questions bubble up through upvotes.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(6,182,212,0.15);">☁️</div>
+        <div class="feature-title">Word Cloud</div>
+        <div class="feature-desc">Collect short text responses and visualize them as a beautiful live word cloud.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(16,185,129,0.15);">🔑</div>
+        <div class="feature-title">Room Codes</div>
+        <div class="feature-desc">Share a 6-character code — participants join instantly with no account required.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(245,158,11,0.15);">🎯</div>
+        <div class="feature-title">Presenter Dashboard</div>
+        <div class="feature-desc">Control which polls are active, monitor participation, and see detailed results at a glance.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(236,72,153,0.15);">👤</div>
+        <div class="feature-title">Anonymous Voting</div>
+        <div class="feature-desc">Participants vote anonymously, making feedback honest and engagement genuine.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <h2 class="section-title">How it works</h2>
+    <p class="section-subtitle">Get your audience engaged in under a minute.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Create a Session</div>
+        <div class="step-desc">Click "Start a Session" and get your unique 6-character room code instantly.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Build Your Polls</div>
+        <div class="step-desc">Add polls, Q&amp;A, or word cloud activities to your session from the presenter dashboard.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Share the Link</div>
+        <div class="step-desc">Copy the auto-generated join link from your dashboard and paste it in the Google Meet chat. One click to join!</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">Go Live!</div>
+        <div class="step-desc">Activate a poll — your audience votes and you see results update in real time.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK JOIN -->
+  <section class="quick-join">
+    <div class="glass-card">
+      <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;">Already have a code?</h3>
+      <p style="color:var(--text-secondary);font-size:14px;">Enter the room code shared by your presenter to join the session.</p>
+      <div class="code-input-row">
+        <input type="text" class="input" id="landing-code-input" placeholder="ENTER CODE" maxlength="6" autocomplete="off" />
+        <button class="btn btn-primary" id="landing-join-btn">Join →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    Made with ❤️ for more engaging online meetings &nbsp;•&nbsp; PollWave 2024
+  </footer>
+</div>
+
+<!-- ===================================================
+     PRESENTER VIEW
+     =================================================== -->
+<div id="presenter-view" class="view">
+
+  <header class="app-header">
+    <div class="app-header-brand">
+      <img src="logo.png" alt="PollWave" style="width:28px;height:28px;border-radius:6px;" />
+      PollWave
+      <span class="badge badge-purple" style="margin-left:4px;">Presenter</span>
+    </div>
+
+    <div class="session-code-display">
+      <div>
+        <div class="session-code-label">Room Code</div>
+        <div class="session-code-value" id="p-room-code">------</div>
+      </div>
+      <button class="copy-btn" id="copy-code-btn" title="Copy room code">📋</button>
+    </div>
+
+    <!-- Share Link (shown next to room code) -->
+    <div class="share-link-box" id="share-link-box">
+      <div class="share-link-label">🔗 Share this link in Google Meet chat</div>
+      <div class="share-link-row">
+        <input type="text" class="share-link-input" id="share-link-input" readonly />
+        <button class="btn btn-primary btn-sm" id="copy-link-btn">Copy Link</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="live-dot"></span>
+      <span id="p-participant-count" style="font-size:13px;color:var(--text-secondary);">0 participants</span>
+      <button class="btn btn-ghost btn-sm" id="end-session-btn">End Session</button>
+    </div>
+  </header>
+
+  <div class="dashboard">
+
+    <!-- SIDEBAR: Poll List -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Activities</span>
+        <span id="p-polls-count" class="badge badge-purple">0</span>
+      </div>
+
+      <div class="polls-list" id="p-polls-list">
+        <!-- Poll items injected here -->
+        <div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">No activities yet</div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-primary w-full" id="p-add-poll-btn" style="gap:8px;">
+          ＋ Add Activity
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN PANEL: Poll Detail / Results -->
+    <main class="main-panel" id="p-main-panel">
+
+      <!-- Welcome / No Poll Selected -->
+      <div class="empty-state" id="p-empty-state">
+        <div class="empty-state-icon">📊</div>
+        <div class="empty-state-title">No activity selected</div>
+        <div class="empty-state-desc">Create a poll or select one from the sidebar to get started.</div>
+        <button class="btn btn-primary" id="p-empty-add-btn">＋ Create First Poll</button>
+      </div>
+
+      <!-- Poll Detail Panel (hidden by default) -->
+      <div id="p-poll-detail" class="hidden">
+
+        <!-- Header -->
+        <div class="poll-detail-header">
+          <div>
+            <div id="p-poll-type-badge" class="badge badge-blue" style="margin-bottom:8px;">MULTIPLE CHOICE</div>
+            <div class="poll-detail-title" id="p-poll-title">Poll Title</div>
+          </div>
+          <div class="poll-detail-actions">
+            <button class="btn btn-secondary btn-sm" id="p-duplicate-btn">⧉ Duplicate</button>
+            <button class="btn btn-danger btn-sm" id="p-delete-btn">🗑 Delete</button>
+            <button class="btn btn-success" id="p-activate-btn">▶ Activate</button>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" id="p-stat-votes">0</div>
+            <div class="stat-label">Votes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="p-stat-participants">0</div>
+            <div class="stat-label">Participants</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="p-stat-pct">0%</div>
+            <div class="stat-label">Response Rate</div>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="glass-card" style="padding:24px;" id="p-results-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <span style="font-weight:600;font-size:15px;">Live Results</span>
+            <span class="total-votes" id="p-total-votes-label">
+              <span class="live-dot"></span> 0 total votes
+            </span>
+          </div>
+          <div class="results-container" id="p-results-container">
+            <!-- bars injected -->
+          </div>
+        </div>
+
+        <!-- Word Cloud Panel -->
+        <div class="glass-card" style="padding:24px;" id="p-wordcloud-panel">
+          <div style="font-weight:600;font-size:15px;margin-bottom:16px;">Word Cloud</div>
+          <div class="wordcloud-container" id="p-wordcloud-container"></div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<!-- ===================================================
+     PARTICIPANT VIEW
+     =================================================== -->
+<div id="participant-view" class="view">
+
+  <header class="app-header">
+    <div class="app-header-brand">
+      <img src="logo.png" alt="PollWave" style="width:28px;height:28px;border-radius:6px;" />
+      PollWave
+      <span class="badge badge-blue" style="margin-left:4px;">Participant</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:13px;color:var(--text-secondary);">Room: <strong style="color:var(--accent-purple);" id="part-room-code-display">------</strong></span>
+      <button class="btn btn-ghost btn-sm" id="part-leave-btn">Leave</button>
+    </div>
+  </header>
+
+  <div class="participant-container">
+
+    <!-- Name prompt (shown once) -->
+    <div id="part-name-prompt" class="glass-card" style="padding:32px;width:100%;text-align:center;">
+      <div style="font-size:40px;margin-bottom:12px;">👋</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;">You're in!</h2>
+      <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px;">What should we call you? (optional — stays anonymous)</p>
+      <div style="display:flex;gap:10px;max-width:320px;margin:0 auto;">
+        <input class="input" type="text" id="part-name-input" placeholder="Your nickname..." maxlength="20" />
+        <button class="btn btn-primary" id="part-name-submit-btn">Go →</button>
+      </div>
+    </div>
+
+    <!-- Waiting for poll -->
+    <div id="part-waiting" class="hidden glass-card" style="padding:32px;width:100%;">
+      <div class="waiting-state">
+        <div class="waiting-spinner"></div>
+        <div class="waiting-title">Waiting for the presenter...</div>
+        <div class="waiting-desc">The presenter will launch a poll soon. Stay tuned!</div>
+      </div>
+    </div>
+
+    <!-- Active Poll: Multiple Choice -->
+    <div id="part-mc-poll" class="hidden participant-poll-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span class="live-dot"></span>
+        <span class="badge badge-green">Live Poll</span>
+        <span id="part-mc-anon" class="badge badge-purple">Anonymous</span>
+      </div>
+      <div class="participant-question" id="part-mc-question">Question goes here?</div>
+      <div class="vote-options" id="part-mc-options">
+        <!-- options injected -->
+      </div>
+      <!-- Results after voting -->
+      <div id="part-mc-results" class="hidden" style="margin-top:16px;">
+        <div class="divider"></div>
+        <div style="font-size:13px;color:var(--text-secondary);margin:12px 0 10px;font-weight:500;">Results so far</div>
+        <div class="vote-results" id="part-mc-results-bars"></div>
+      </div>
+    </div>
+
+    <!-- Active Poll: Open Ended -->
+    <div id="part-oe-poll" class="hidden participant-poll-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span class="live-dot"></span>
+        <span class="badge badge-blue">Open Question</span>
+      </div>
+      <div class="participant-question" id="part-oe-question">Question goes here?</div>
+      <div class="input-group">
+        <textarea class="textarea" id="part-oe-answer" placeholder="Type your answer..." rows="3"></textarea>
+        <button class="btn btn-primary" id="part-oe-submit-btn">Submit Answer ↵</button>
+      </div>
+      <div id="part-oe-submitted" class="hidden" style="text-align:center;padding:20px;">
+        <div style="font-size:36px;margin-bottom:8px;">✅</div>
+        <div style="font-weight:600;">Answer submitted!</div>
+        <div style="color:var(--text-secondary);font-size:14px;margin-top:4px;">Thank you for your response.</div>
+      </div>
+    </div>
+
+    <!-- Active Poll: Word Cloud -->
+    <div id="part-wc-poll" class="hidden participant-poll-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span class="live-dot"></span>
+        <span class="badge badge-purple" style="background:rgba(6,182,212,0.15);color:var(--accent-cyan);border-color:rgba(6,182,212,0.3);">Word Cloud</span>
+      </div>
+      <div class="participant-question" id="part-wc-question">Question goes here?</div>
+      <div class="input-group">
+        <input type="text" class="input" id="part-wc-word" placeholder="Type a word or phrase..." maxlength="30" style="font-size:16px;" />
+        <button class="btn btn-primary" id="part-wc-submit-btn">Submit ↵</button>
+      </div>
+      <div id="part-wc-submitted" class="hidden" style="text-align:center;padding:20px;">
+        <div style="font-size:36px;margin-bottom:8px;">☁️</div>
+        <div style="font-weight:600;">Word added to the cloud!</div>
+      </div>
+    </div>
+
+    <!-- Q&A Section (always visible after name prompt) -->
+    <div id="part-qa-section" class="hidden" style="width:100%;">
+      <div class="glass-card" style="padding:24px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;margin-bottom:16px;">💬 Q&amp;A — Ask a question</div>
+        <div class="qa-submit-area">
+          <input type="text" class="input" id="part-qa-input" placeholder="Type your question..." maxlength="200" />
+          <button class="btn btn-primary" id="part-qa-submit-btn">Ask</button>
+        </div>
+        <div style="margin-top:20px;">
+          <div style="font-size:13px;color:var(--text-muted);font-weight:500;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">All Questions</div>
+          <div class="qa-participant-list" id="part-qa-list">
+            <div style="color:var(--text-muted);font-size:14px;text-align:center;padding:20px;">No questions yet. Be the first to ask!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================================================
+     MODALS
+     =================================================== -->
+
+<!-- Create Session Modal -->
+<div id="modal-create-session" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-title">🚀 Start a New Session</div>
+    <div class="input-group" style="margin-bottom:16px;">
+      <label class="input-label">Session Title</label>
+      <input type="text" class="input" id="cs-title" placeholder="e.g. Weekly Team Standup" maxlength="80" />
+    </div>
+    <div class="input-group">
+      <label class="input-label">Your name (presenter)</label>
+      <input type="text" class="input" id="cs-presenter-name" placeholder="e.g. Alice" maxlength="40" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cs-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="cs-create-btn">Create Session →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Join Session Modal -->
+<div id="modal-join-session" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-title">🔗 Join a Session</div>
+    <div class="input-group">
+      <label class="input-label">Room Code</label>
+      <input type="text" class="input" id="js-code" placeholder="Enter 6-character code" maxlength="6"
+        style="font-size:24px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-align:center;" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="js-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="js-join-btn">Join Session →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Activity Modal -->
+<div id="modal-add-poll" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-title">＋ Add Activity</div>
+
+    <!-- Type selector -->
+    <div style="margin-bottom:20px;">
+      <label class="input-label" style="margin-bottom:8px;display:block;">Activity Type</label>
+      <div class="tabs" id="poll-type-tabs">
+        <button class="tab active" data-type="mc">📊 Multiple Choice</button>
+        <button class="tab" data-type="oe">💬 Open Ended</button>
+        <button class="tab" data-type="wc">☁️ Word Cloud</button>
+      </div>
+    </div>
+
+    <!-- Question -->
+    <div class="input-group" style="margin-bottom:16px;">
+      <label class="input-label">Question</label>
+      <input type="text" class="input" id="ap-question" placeholder="What would you like to ask?" maxlength="200" />
+    </div>
+
+    <!-- MC Options -->
+    <div id="ap-mc-section">
+      <div class="input-group">
+        <label class="input-label">Answer Options</label>
+        <div class="options-builder" id="ap-options-builder">
+          <div class="option-row">
+            <input type="text" class="input" placeholder="Option A" maxlength="100" />
+            <button class="remove-option-btn" onclick="removeOption(this)">✕</button>
+          </div>
+          <div class="option-row">
+            <input type="text" class="input" placeholder="Option B" maxlength="100" />
+            <button class="remove-option-btn" onclick="removeOption(this)">✕</button>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="ap-add-option-btn" style="margin-top:8px;align-self:flex-start;">＋ Add Option</button>
+      </div>
+    </div>
+
+    <!-- OE / WC section (no extra fields needed) -->
+    <div id="ap-oe-section" class="hidden">
+      <div style="padding:16px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius-md);font-size:14px;color:var(--text-secondary);">
+        Participants will type their answer. Responses will be listed in the presenter view.
+      </div>
+    </div>
+    <div id="ap-wc-section" class="hidden">
+      <div style="padding:16px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:var(--radius-md);font-size:14px;color:var(--text-secondary);">
+        Participants submit one word or short phrase. All responses are visualized as a word cloud.
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="ap-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="ap-save-btn">Add Activity →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Q&A Presenter Panel (slide-in overlay on presenter view) -->
+<div id="p-qa-overlay" class="hidden" style="
+  position:fixed;right:0;top:65px;bottom:0;width:360px;
+  background:var(--bg-secondary);border-left:1px solid var(--glass-border);
+  z-index:200;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+">
+  <div style="padding:20px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-weight:700;font-size:16px;">💬 Q&amp;A</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="badge badge-purple" id="p-qa-count">0</span>
+      <button class="btn btn-ghost btn-sm" id="p-close-qa-btn">✕</button>
+    </div>
+  </div>
+  <div class="qa-list" id="p-qa-list" style="flex:1;overflow-y:auto;padding:16px;">
+    <div style="color:var(--text-muted);font-size:14px;text-align:center;padding:20px;">No questions yet.</div>
+  </div>
+</div>
+
+<!-- Q&A Toggle Button for Presenter -->
+<button id="p-qa-toggle-btn" class="hidden btn btn-secondary" style="
+  position:fixed;right:24px;bottom:24px;z-index:150;
+  box-shadow:var(--shadow-elevated);gap:8px;
+">
+  💬 Q&amp;A <span class="badge badge-purple" id="p-qa-toggle-count">0</span>
+</button>
+
+<script src="app.js"></script>
+</body>
+</html>
