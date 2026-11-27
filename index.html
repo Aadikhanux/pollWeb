@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PollWave — Live Polls & Q&A for Online Meetings</title>
-  <meta name="description" content="Engage your audience with real-time polls, Q&A, and quizzes during online meetings. Create a session in seconds and share your room code." />
+  <title>epic-poll — Live Polls & Q&A for Online Meetings</title>
+  <meta name="description" content="Join the latest live poll, share your answer, and follow results in real time." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="style.css" />
@@ -27,11 +27,10 @@
   <!-- NAV -->
   <nav class="nav">
     <div class="nav-brand">
-      <img src="logo.png" alt="PollWave logo" class="nav-logo" />
-      PollWave
+      <img src="logo.png" alt="epic-poll logo" class="nav-logo" />
+      epic-poll
     </div>
     <div class="nav-actions">
-      <button class="btn btn-ghost btn-sm" id="nav-join-btn">Join Session</button>
       <button class="btn btn-primary btn-sm" id="nav-create-btn">Create Session</button>
     </div>
   </nav>
@@ -43,21 +42,27 @@
       Real-time audience engagement
     </div>
     <h1 class="hero-title">
-      Engage your audience<br />
+      Join the conversation<br />
       <span class="grad">live, right now.</span>
     </h1>
     <p class="hero-subtitle">
-      Create instant polls, Q&amp;A sessions, and quizzes during your online meeting. No sign-up needed — just share a room code.
+      See the latest live poll and share your answer. No room code or sign-up needed.
     </p>
     <div class="hero-actions">
       <button class="btn btn-primary btn-lg" id="hero-create-btn">
         🚀 Start a Session
       </button>
-      <button class="btn btn-secondary btn-lg" id="hero-join-btn">
-        🔗 Join a Session
-      </button>
     </div>
   </section>
+
+  <section class="public-poll-section" aria-live="polite">
+  <div class="public-poll-card glass-card" id="public-poll-card">
+    <div class="public-poll-status"><span class="live-dot"></span> PUBLIC LIVE POLL</div>
+    <h2 id="public-poll-question">Looking for the latest poll…</h2>
+    <p id="public-poll-session"></p>
+    <button class="btn btn-primary btn-lg" id="public-poll-join-btn" disabled>Loading poll…</button>
+  </div>
+</section>
 
   <!-- FEATURES -->
   <section class="features">
@@ -80,11 +85,6 @@
         <div class="feature-desc">Collect short text responses and visualize them as a beautiful live word cloud.</div>
       </div>
       <div class="feature-card">
-        <div class="feature-icon" style="background: rgba(16,185,129,0.15);">🔑</div>
-        <div class="feature-title">Room Codes</div>
-        <div class="feature-desc">Share a 6-character code — participants join instantly with no account required.</div>
-      </div>
-      <div class="feature-card">
         <div class="feature-icon" style="background: rgba(245,158,11,0.15);">🎯</div>
         <div class="feature-title">Presenter Dashboard</div>
         <div class="feature-desc">Control which polls are active, monitor participation, and see detailed results at a glance.</div>
@@ -105,7 +105,7 @@
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-title">Create a Session</div>
-        <div class="step-desc">Click "Start a Session" and get your unique 6-character room code instantly.</div>
+        <div class="step-desc">Start a session, then create an activity from the presenter dashboard.</div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
@@ -115,7 +115,7 @@
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-title">Share the Link</div>
-        <div class="step-desc">Copy the auto-generated join link from your dashboard and paste it in the Google Meet chat. One click to join!</div>
+        <div class="step-desc">Participants see the live poll on the website and can answer without entering a code.</div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
@@ -123,23 +123,10 @@
         <div class="step-desc">Activate a poll — your audience votes and you see results update in real time.</div>
       </div>
     </div>
-  </section>
-
-  <!-- QUICK JOIN -->
-  <section class="quick-join">
-    <div class="glass-card">
-      <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;">Already have a code?</h3>
-      <p style="color:var(--text-secondary);font-size:14px;">Enter the room code shared by your presenter to join the session.</p>
-      <div class="code-input-row">
-        <input type="text" class="input" id="landing-code-input" placeholder="ENTER CODE" maxlength="6" autocomplete="off" />
-        <button class="btn btn-primary" id="landing-join-btn">Join →</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
+  </section>`n`n<!-- FOOTER -->
   <footer class="footer">
-    Made with ❤️ for more engaging online meetings &nbsp;•&nbsp; PollWave 2024
+    Made with ❤️ for more engaging online meetings &nbsp;•&nbsp; epic-poll 2024
+      &nbsp;·&nbsp; <a href="admin.html">Admin panel</a>
   </footer>
 </div>
 
@@ -150,27 +137,11 @@
 
   <header class="app-header">
     <div class="app-header-brand">
-      <img src="logo.png" alt="PollWave" style="width:28px;height:28px;border-radius:6px;" />
-      PollWave
-      <span class="badge badge-purple" style="margin-left:4px;">Presenter</span>
+      <img src="logo.png" alt="epic-poll" style="width:28px;height:28px;border-radius:6px;" />
+      epic-poll
+      <span class="badge badge-purple" style="margin-left:4px;">Admin</span>
     </div>
 
-    <div class="session-code-display">
-      <div>
-        <div class="session-code-label">Room Code</div>
-        <div class="session-code-value" id="p-room-code">------</div>
-      </div>
-      <button class="copy-btn" id="copy-code-btn" title="Copy room code">📋</button>
-    </div>
-
-    <!-- Share Link (shown next to room code) -->
-    <div class="share-link-box" id="share-link-box">
-      <div class="share-link-label">🔗 Share this link in Google Meet chat</div>
-      <div class="share-link-row">
-        <input type="text" class="share-link-input" id="share-link-input" readonly />
-        <button class="btn btn-primary btn-sm" id="copy-link-btn">Copy Link</button>
-      </div>
-    </div>
 
     <div style="display:flex;gap:8px;align-items:center;">
       <span class="live-dot"></span>
@@ -178,6 +149,15 @@
       <button class="btn btn-ghost btn-sm" id="end-session-btn">End Session</button>
     </div>
   </header>
+
+  <section class="admin-overview">
+    <div>
+      <div class="admin-eyebrow">Session administration</div>
+      <h1 class="admin-session-title" id="p-session-title">Admin Panel</h1>
+      <div class="admin-session-meta">Presenter controls<span class="admin-status-dot"></span><span id="admin-live-status">No poll live</span></div>
+    </div>
+    <button class="btn btn-secondary btn-sm" id="p-export-results-btn">↓ Export results</button>
+  </section>
 
   <div class="dashboard">
 
@@ -275,28 +255,17 @@
 
   <header class="app-header">
     <div class="app-header-brand">
-      <img src="logo.png" alt="PollWave" style="width:28px;height:28px;border-radius:6px;" />
-      PollWave
+      <img src="logo.png" alt="epic-poll" style="width:28px;height:28px;border-radius:6px;" />
+      epic-poll
       <span class="badge badge-blue" style="margin-left:4px;">Participant</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:13px;color:var(--text-secondary);">Room: <strong style="color:var(--accent-purple);" id="part-room-code-display">------</strong></span>
+      <span style="font-size:13px;color:var(--text-secondary);">Live poll</span>
       <button class="btn btn-ghost btn-sm" id="part-leave-btn">Leave</button>
     </div>
   </header>
 
   <div class="participant-container">
-
-    <!-- Name prompt (shown once) -->
-    <div id="part-name-prompt" class="glass-card" style="padding:32px;width:100%;text-align:center;">
-      <div style="font-size:40px;margin-bottom:12px;">👋</div>
-      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;">You're in!</h2>
-      <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px;">What should we call you? (optional — stays anonymous)</p>
-      <div style="display:flex;gap:10px;max-width:320px;margin:0 auto;">
-        <input class="input" type="text" id="part-name-input" placeholder="Your nickname..." maxlength="20" />
-        <button class="btn btn-primary" id="part-name-submit-btn">Go →</button>
-      </div>
-    </div>
 
     <!-- Waiting for poll -->
     <div id="part-waiting" class="hidden glass-card" style="padding:32px;width:100%;">
@@ -400,22 +369,6 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="cs-cancel-btn">Cancel</button>
       <button class="btn btn-primary" id="cs-create-btn">Create Session →</button>
-    </div>
-  </div>
-</div>
-
-<!-- Join Session Modal -->
-<div id="modal-join-session" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-title">🔗 Join a Session</div>
-    <div class="input-group">
-      <label class="input-label">Room Code</label>
-      <input type="text" class="input" id="js-code" placeholder="Enter 6-character code" maxlength="6"
-        style="font-size:24px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-align:center;" />
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="js-cancel-btn">Cancel</button>
-      <button class="btn btn-primary" id="js-join-btn">Join Session →</button>
     </div>
   </div>
 </div>

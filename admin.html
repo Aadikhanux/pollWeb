@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | epic-poll</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-page">
+  <section id="admin-auth-screen" class="admin-auth-screen">
+    <form id="admin-auth-form" class="glass-card admin-auth-card">
+      <a class="admin-brand" href="index.html"><img src="logo.png" alt="" /> epic-poll <span>ADMIN</span></a>
+      <div class="admin-eyebrow" id="admin-auth-mode">Admin sign in</div>
+      <h1 id="admin-auth-title">Unlock admin panel</h1>
+      <p id="admin-auth-description">Enter your admin password to continue.</p>
+      <label class="input-label" for="admin-auth-password">Password</label>
+      <input id="admin-auth-password" class="input" type="password" autocomplete="current-password" required />
+      <div id="admin-auth-confirm-wrap" class="hidden">
+        <label class="input-label" for="admin-auth-confirm">Confirm password</label>
+        <input id="admin-auth-confirm" class="input" type="password" autocomplete="new-password" />
+      </div>
+      <div id="admin-auth-error" class="admin-auth-error" role="alert"></div>
+      <button id="admin-auth-submit" class="btn btn-primary w-full" type="submit">Sign in</button>
+      <a class="admin-auth-home" href="index.html">Back to website</a>
+    </form>
+  </section>
+  <div id="admin-app" hidden>
+  <header class="admin-topbar">
+    <a class="admin-brand" href="index.html"><img src="logo.png" alt="" /> epic-poll <span>ADMIN</span></a>
+    <a class="btn btn-ghost btn-sm" href="index.html">← Main website</a>
+    <button id="admin-signout-btn" class="btn btn-ghost btn-sm">Sign out</button>
+  </header>
+
+  <main class="admin-shell">
+    <section class="admin-intro">
+      <div class="admin-eyebrow">Control center</div>
+      <h1>Poll administration</h1>
+      <p>Open a session from this browser to control its polls and review results.</p>
+    </section>
+
+    <section class="glass-card admin-session-picker">
+      <div class="admin-picker-copy"><strong>Choose a session</strong><span>Sessions are stored in this browser.</span></div>
+      <select id="admin-session-select" class="input" aria-label="Choose session"><option value="">Select a saved session</option></select>
+    </section>
+
+    <section id="admin-workspace" class="admin-workspace hidden">
+      <div class="admin-session-heading glass-card">
+        <div><div class="admin-eyebrow">Current session</div><h2 id="admin-session-name">Session</h2><div class="admin-session-meta"><span class="admin-status-dot" id="admin-status-dot"></span><span id="admin-status-text">No poll live</span></div></div>
+        <button id="admin-export-btn" class="btn btn-secondary btn-sm">↓ Export results</button>
+      </div>
+      <div class="admin-session-controls">
+        <section class="glass-card admin-activity-card">
+          <div class="admin-card-title"><div><div class="admin-eyebrow">Manage activities</div><h2>Polls & activities</h2></div><button id="admin-add-btn" class="btn btn-primary btn-sm">＋ Add poll</button></div>
+          <div id="admin-poll-list" class="admin-poll-list"></div>
+          <form id="admin-add-form" class="admin-add-form hidden">
+            <label class="input-label" for="admin-question">Poll question</label>
+            <input id="admin-question" class="input" maxlength="200" required placeholder="What would you like to ask?" />
+            <label class="input-label" for="admin-options">Answer options <span>(one per line)</span></label>
+            <textarea id="admin-options" class="input" rows="4" required placeholder="Option A&#10;Option B"></textarea>
+            <div class="admin-form-actions"><button id="admin-cancel-add" type="button" class="btn btn-ghost btn-sm">Cancel</button><button class="btn btn-primary btn-sm" type="submit">Create poll</button></div>
+          </form>
+        </section>
+        <section class="glass-card admin-results-card">
+          <div class="admin-card-title"><div><div class="admin-eyebrow">Live reporting</div><h2 id="admin-results-title">Select an activity</h2></div><span id="admin-response-total" class="badge badge-purple"></span></div>
+          <div id="admin-results" class="admin-results"><div class="admin-empty">Choose a poll to view its current results.</div></div>
+        </section>
+      </div>
+    </section>
+    <div id="admin-empty" class="glass-card admin-empty admin-empty-main">No saved sessions found. Create a session on the main website first, then return here.</div>
+    <div id="admin-toast" class="admin-toast" role="status"></div>
+  </main>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>

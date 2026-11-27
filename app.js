@@ -89,13 +89,47 @@ function loadSession(code) {
   try { return JSON.parse(raw); } catch { return null; }
 }
 
+function findLatestLivePoll() {
+  let latest = null;
+  for (let index = 0; index < localStorage.length; index++) {
+    const key = localStorage.key(index);
+    if (!key?.startsWith('pollwave_session_')) continue;
+    const data = loadSession(key.slice('pollwave_session_'.length));
+    if (!data?.activePollId) continue;
+    const poll = (data.polls || []).find(item => item.id === data.activePollId);
+    if (!poll) continue;
+    const timestamp = poll.createdAt || data.session?.createdAt || 0;
+    if (!latest || timestamp > latest.timestamp) latest = { code: data.session.code, title: data.session.title || 'Live session', poll, timestamp };
+  }
+  return latest;
+}
+
+function renderLatestPublicPoll() {
+  const button = document.getElementById('public-poll-join-btn');
+  if (!button) return;
+  const latest = findLatestLivePoll();
+  if (!latest) {
+    document.getElementById('public-poll-question').textContent = 'No live poll right now';
+    document.getElementById('public-poll-session').textContent = 'Check back when a new poll goes live.';
+    button.textContent = 'No poll available';
+    button.disabled = true;
+    button.removeAttribute('data-session-code');
+    return;
+  }
+  document.getElementById('public-poll-question').textContent = latest.poll.question;
+  document.getElementById('public-poll-session').textContent = latest.title;
+  button.textContent = 'Answer this poll';
+  button.disabled = false;
+  button.dataset.sessionCode = latest.code;
+}
+
 function startSyncLoop(role) {
   if (STATE.syncInterval) clearInterval(STATE.syncInterval);
   STATE.syncInterval = setInterval(() => {
     if (role === 'presenter') {
-      // Presenter saves state and reads participant votes
-      saveSession();
+      // Read other tabs' changes before writing, so the separate admin page can control this session.
       refreshPresenterUI();
+      saveSession();
     } else {
       // Participant reads state from storage
       syncParticipant();
@@ -129,12 +163,7 @@ function createSession(title, presenterName) {
 
 function enterPresenterView() {
   showView('presenter');
-  document.getElementById('p-room-code').textContent = STATE.session.code;
-
-  // Build & display shareable join link
-  const joinUrl = buildJoinUrl(STATE.session.code);
-  const linkInput = document.getElementById('share-link-input');
-  if (linkInput) linkInput.value = joinUrl;
+  document.getElementById('p-session-title').textContent = STATE.session.title || 'Admin Panel';
 
   renderSidebar();
   renderMainPanel();
@@ -144,17 +173,6 @@ function enterPresenterView() {
   document.getElementById('p-qa-toggle-btn').classList.remove('hidden');
 
   startSyncLoop('presenter');
-}
-
-// Build a fully-qualified URL that auto-joins participants
-function buildJoinUrl(code) {
-  const loc = window.location;
-  // For file:// URLs we use the hash; for http(s) we use a query param
-  if (loc.protocol === 'file:') {
-    return loc.href.split('#')[0] + '#join=' + code;
-  }
-  const base = loc.origin + loc.pathname;
-  return base + '?join=' + code;
 }
 
 // ============================================================
@@ -361,12 +379,23 @@ function updatePresenterStats() {
   document.getElementById('p-stat-participants').textContent = participantCount;
 
   const poll = STATE.polls.find(p => p.id === STATE.selectedPollId);
-  if (poll && participantCount > 0) {
+  if (poll) {
     const votes = poll.type === 'mc'
       ? (poll.votes || []).reduce((a, b) => a + b, 0)
       : (poll.responses || []).length;
-    const pct = Math.round((votes / Math.max(participantCount, 1)) * 100);
+    const pct = participantCount > 0 ? Math.round((votes / participantCount) * 100) : 0;
     document.getElementById('p-stat-pct').textContent = Math.min(pct, 100) + '%';
+  } else {
+    document.getElementById('p-stat-votes').textContent = '0';
+    document.getElementById('p-stat-participants').textContent = participantCount;
+    document.getElementById('p-stat-pct').textContent = '0%';
+  }
+
+  const livePoll = STATE.polls.find(item => item.id === STATE.activePollId);
+  const liveStatus = document.getElementById('admin-live-status');
+  if (liveStatus) {
+    liveStatus.textContent = livePoll ? `Live: ${livePoll.question}` : 'No poll live';
+    liveStatus.previousElementSibling.classList.toggle('is-live', Boolean(livePoll));
   }
 
   // Update Q&A count
@@ -380,14 +409,10 @@ function refreshPresenterUI() {
   const data = loadSession(STATE.session?.code);
   if (!data) return;
 
-  // Merge votes from participants
-  data.polls.forEach(storedPoll => {
-    const local = STATE.polls.find(p => p.id === storedPoll.id);
-    if (local) {
-      if (local.type === 'mc') local.votes = storedPoll.votes || local.votes;
-      else local.responses = storedPoll.responses || local.responses;
-    }
-  });
+  // Adopt the stored activity list, including changes made from admin.html.
+  STATE.polls = data.polls || [];
+  STATE.activePollId = data.activePollId || null;
+  if (!STATE.polls.some(poll => poll.id === STATE.selectedPollId)) STATE.selectedPollId = null;
 
   STATE.qaItems = data.qaItems || [];
   STATE.participantCount = data.participantCount || 0;
@@ -435,6 +460,28 @@ function duplicatePoll(pollId) {
   saveSession();
   renderSidebar();
   toast('Activity duplicated', 'success');
+}
+
+function exportResults() {
+  if (!STATE.session) return;
+  const rows = [['Session', STATE.session.title], [], ['Activity', 'Type', 'Result', 'Count']];
+  STATE.polls.forEach(poll => {
+    const type = poll.type === 'mc' ? 'Multiple choice' : poll.type === 'oe' ? 'Open ended' : 'Word cloud';
+    if (poll.type === 'mc') {
+      poll.options.forEach((option, index) => rows.push([poll.question, type, option, (poll.votes || [])[index] || 0]));
+    } else {
+      (poll.responses || []).forEach(response => rows.push([poll.question, type, response.text, 1]));
+      if (!(poll.responses || []).length) rows.push([poll.question, type, 'No responses', 0]);
+    }
+  });
+  const csv = rows.map(row => row.map(value => `"${String(value ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `epic-poll-${STATE.session.code}-results.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+  toast('Results exported', 'success');
 }
 
 // ============================================================
@@ -577,7 +624,6 @@ function joinSession(code) {
   saveParticipantSession(data);
 
   enterParticipantView();
-  closeModal('modal-join-session');
 }
 
 function saveParticipantSession(data) {
@@ -589,19 +635,11 @@ function saveParticipantSession(data) {
 
 function enterParticipantView() {
   showView('participant');
-  document.getElementById('part-room-code-display').textContent = STATE.session.code;
-  document.getElementById('part-name-prompt').classList.remove('hidden');
+  STATE.participantName = 'Anonymous';
   document.getElementById('part-waiting').classList.add('hidden');
   document.getElementById('part-mc-poll').classList.add('hidden');
   document.getElementById('part-oe-poll').classList.add('hidden');
   document.getElementById('part-wc-poll').classList.add('hidden');
-  document.getElementById('part-qa-section').classList.add('hidden');
-}
-
-function completeNamePrompt() {
-  const name = document.getElementById('part-name-input').value.trim();
-  STATE.participantName = name || 'Anonymous';
-  document.getElementById('part-name-prompt').classList.add('hidden');
   document.getElementById('part-qa-section').classList.remove('hidden');
   startSyncLoop('participant');
   syncParticipant();
@@ -930,56 +968,16 @@ function escHtml(str) {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
-  // --- AUTO-JOIN FROM URL ---
-  // Supports: file:///path/index.html#join=CODE  or  https://host/index.html?join=CODE
-  // Also supports legacy plain hash:  #CODE
-  function getCodeFromUrl() {
-    // Query param: ?join=CODE
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('join')) return params.get('join').trim().toUpperCase();
-    // Hash: #join=CODE
-    const hash = window.location.hash.replace('#', '');
-    if (hash.startsWith('join=')) return hash.slice(5).trim().toUpperCase();
-    // Legacy plain hash: #ABCDEF
-    if (hash.length === 6) return hash.trim().toUpperCase();
-    return null;
-  }
-
-  const autoJoinCode = getCodeFromUrl();
-  if (autoJoinCode) {
-    // Small delay so the page renders first
-    setTimeout(() => {
-      const data = loadSession(autoJoinCode);
-      if (data) {
-        joinSession(autoJoinCode);
-      } else {
-        // Session not in this browser — pre-fill code and show modal
-        document.getElementById('js-code').value = autoJoinCode;
-        document.getElementById('landing-code-input').value = autoJoinCode;
-        openModal('modal-join-session');
-        toast('Enter the room to join the session 🔗', 'info', 4000);
-      }
-    }, 300);
-  }
-
   // --- LANDING ---
   const openCreate = () => openModal('modal-create-session');
-  const openJoin = () => openModal('modal-join-session');
-
   document.getElementById('nav-create-btn').addEventListener('click', openCreate);
   document.getElementById('hero-create-btn').addEventListener('click', openCreate);
-  document.getElementById('nav-join-btn').addEventListener('click', openJoin);
-  document.getElementById('hero-join-btn').addEventListener('click', openJoin);
-
-  // Landing quick join
-  document.getElementById('landing-join-btn').addEventListener('click', () => {
-    const code = document.getElementById('landing-code-input').value.trim();
-    if (!code) { openJoin(); return; }
-    joinSession(code);
+  document.getElementById('public-poll-join-btn').addEventListener('click', event => {
+    const code = event.currentTarget.dataset.sessionCode;
+    if (code) joinSession(code);
   });
-  document.getElementById('landing-code-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('landing-join-btn').click();
-  });
+  renderLatestPublicPoll();
+  setInterval(() => { if (STATE.currentView === 'landing') renderLatestPublicPoll(); }, 1800);
 
   // --- CREATE SESSION MODAL ---
   document.getElementById('cs-cancel-btn').addEventListener('click', () => closeModal('modal-create-session'));
@@ -993,21 +991,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === e.currentTarget) closeModal('modal-create-session');
   });
 
-  // --- JOIN SESSION MODAL ---
-  document.getElementById('js-cancel-btn').addEventListener('click', () => closeModal('modal-join-session'));
-  document.getElementById('js-join-btn').addEventListener('click', () => {
-    joinSession(document.getElementById('js-code').value);
-  });
-  document.getElementById('js-code').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('js-join-btn').click();
-  });
-  document.getElementById('modal-join-session').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeModal('modal-join-session');
-  });
-
   // --- PRESENTER ---
   document.getElementById('p-add-poll-btn').addEventListener('click', openAddPollModal);
   document.getElementById('p-empty-add-btn').addEventListener('click', openAddPollModal);
+  document.getElementById('p-export-results-btn').addEventListener('click', exportResults);
   document.getElementById('end-session-btn').addEventListener('click', () => {
     if (confirm('End this session? Participants will be disconnected.')) {
       stopSync();
@@ -1020,26 +1007,6 @@ document.addEventListener('DOMContentLoaded', () => {
       showView('landing');
       toast('Session ended', 'info');
     }
-  });
-
-  document.getElementById('copy-code-btn').addEventListener('click', () => {
-    navigator.clipboard.writeText(STATE.session?.code || '').then(() => toast('Code copied! 📋', 'success'));
-  });
-
-  // Copy shareable join link
-  document.getElementById('copy-link-btn').addEventListener('click', () => {
-    const link = document.getElementById('share-link-input')?.value;
-    if (!link) return;
-    navigator.clipboard.writeText(link).then(() => {
-      toast('🔗 Link copied! Paste it in your Google Meet chat.', 'success', 4000);
-      const btn = document.getElementById('copy-link-btn');
-      btn.textContent = '✓ Copied!';
-      btn.style.background = 'var(--grad-success)';
-      setTimeout(() => {
-        btn.textContent = 'Copy Link';
-        btn.style.background = '';
-      }, 2500);
-    });
   });
 
   document.getElementById('p-activate-btn').addEventListener('click', () => {
@@ -1083,10 +1050,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- PARTICIPANT ---
-  document.getElementById('part-name-submit-btn').addEventListener('click', completeNamePrompt);
-  document.getElementById('part-name-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') completeNamePrompt();
-  });
 
   document.getElementById('part-leave-btn').addEventListener('click', () => {
     stopSync();
@@ -1119,6 +1082,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // localStorage change listener (cross-tab sync)
   window.addEventListener('storage', e => {
+    renderLatestPublicPoll();
     if (!STATE.session) return;
     if (e.key === 'pollwave_session_' + STATE.session.code) {
       if (STATE.currentView === 'presenter') refreshPresenterUI();
