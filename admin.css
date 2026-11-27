@@ -28,6 +28,11 @@
 .admin-status-dot { width:7px; height:7px; margin-left:8px; border-radius:50%; background:var(--text-muted); }
 .admin-status-dot.is-live { background:var(--accent-green); box-shadow:0 0 9px rgba(16,185,129,.55); }
 .admin-session-controls { display:grid; grid-template-columns:minmax(340px,.9fr) minmax(420px,1.1fr); gap:20px; align-items:start; }
+.admin-share-box { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:16px 20px; margin:0 0 20px; }
+.admin-share-box > div:first-child { display:flex; flex-direction:column; gap:5px; }
+.admin-share-box > div:first-child span { color:var(--text-secondary); font-size:13px; }
+.admin-share-row { display:flex; gap:8px; width:min(560px,60%); }
+.admin-share-row .input { min-width:0; }
 .admin-activity-card,.admin-results-card { padding:22px; min-width:0; }
 .admin-card-title { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; }
 .admin-poll-list { display:flex; flex-direction:column; gap:9px; }
@@ -55,4 +60,4 @@
 .admin-toast { position:fixed; bottom:24px; left:50%; z-index:500; transform:translate(-50%,12px); opacity:0; pointer-events:none; padding:12px 18px; border:1px solid var(--glass-border); border-radius:var(--radius-md); background:var(--bg-secondary); box-shadow:var(--shadow-elevated); color:var(--text-primary); transition:var(--transition); }
 .admin-toast.visible { opacity:1; transform:translate(-50%,0); }
 @media (max-width:850px) { .admin-session-picker { grid-template-columns:1fr; } .admin-session-controls { grid-template-columns:1fr; } }
-@media (max-width:560px) { .admin-shell { padding:36px 16px 60px; } .admin-topbar { padding:0 16px; } .admin-session-heading { align-items:flex-start; flex-direction:column; } .admin-poll-row { align-items:flex-start; flex-direction:column; } .admin-poll-row > .btn { align-self:flex-end; } .admin-intro h1 { font-size:28px; } }
+@media (max-width:560px) { .admin-shell { padding:36px 16px 60px; } .admin-topbar { padding:0 16px; } .admin-session-heading { align-items:flex-start; flex-direction:column; } .admin-share-box { align-items:stretch; flex-direction:column; } .admin-share-row { width:100%; } .admin-poll-row { align-items:flex-start; flex-direction:column; } .admin-poll-row > .btn { align-self:flex-end; } .admin-intro h1 { font-size:28px; } }

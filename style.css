@@ -583,6 +583,22 @@ body::before {
 .public-poll-card h2 { margin: 16px 0 8px; font: 700 24px 'Space Grotesk',sans-serif; }
 .public-poll-card p { margin: 0 0 20px; color: var(--text-secondary); font-size: 14px; }
 .public-poll-card button:disabled { opacity: .55; cursor: not-allowed; }
+.public-poll-options { display:flex; flex-direction:column; gap:9px; margin-bottom:14px; }
+.public-poll-options .vote-option { width:100%; text-align:left; }
+.public-poll-options .vote-option.selected { border-color:var(--accent-purple); background:rgba(139,92,246,.14); }
+.public-poll-card > .input { margin:0 0 14px; }
+.public-poll-results { display:flex; flex-direction:column; gap:12px; margin-top:22px; }
+.public-poll-results:empty { display:none; }
+.public-poll-results h3 { display:flex; justify-content:space-between; margin:0 0 2px; font-size:14px; }
+.public-poll-results h3 span { color:var(--text-secondary); font-weight:400; }
+.public-result-row { display:flex; flex-direction:column; gap:7px; }
+.public-result-row > div:first-child { display:flex; justify-content:space-between; gap:12px; font-size:13px; }
+.public-result-row > div:first-child span:last-child { color:var(--text-secondary); }
+.public-result-track { height:9px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.07); }
+.public-result-track i { display:block; height:100%; border-radius:inherit; background:var(--grad-primary); transition:width .3s ease; }
+.public-response-list { display:flex; flex-direction:column; gap:7px; max-height:180px; overflow:auto; }
+.public-response-list > div { padding:9px 12px; background:var(--bg-card); border:1px solid var(--glass-border); border-radius:var(--radius-sm); font-size:13px; }
+.public-no-responses { margin:0; color:var(--text-muted); font-size:13px; }
 
 /* ===== PRESENTER DASHBOARD ===== */
 #presenter-view {

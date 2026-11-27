@@ -30,9 +30,6 @@
       <img src="logo.png" alt="epic-poll logo" class="nav-logo" />
       epic-poll
     </div>
-    <div class="nav-actions">
-      <button class="btn btn-primary btn-sm" id="nav-create-btn">Create Session</button>
-    </div>
   </nav>
 
   <!-- HERO -->
@@ -48,11 +45,6 @@
     <p class="hero-subtitle">
       See the latest live poll and share your answer. No room code or sign-up needed.
     </p>
-    <div class="hero-actions">
-      <button class="btn btn-primary btn-lg" id="hero-create-btn">
-        🚀 Start a Session
-      </button>
-    </div>
   </section>
 
   <section class="public-poll-section" aria-live="polite">
@@ -60,7 +52,10 @@
     <div class="public-poll-status"><span class="live-dot"></span> PUBLIC LIVE POLL</div>
     <h2 id="public-poll-question">Looking for the latest poll…</h2>
     <p id="public-poll-session"></p>
+    <div id="public-poll-options" class="public-poll-options"></div>
+    <input id="public-poll-response" class="input hidden" maxlength="200" placeholder="Type your response" />
     <button class="btn btn-primary btn-lg" id="public-poll-join-btn" disabled>Loading poll…</button>
+    <div id="public-poll-results" class="public-poll-results"></div>
   </div>
 </section>
 
@@ -126,7 +121,6 @@
   </section>`n`n<!-- FOOTER -->
   <footer class="footer">
     Made with ❤️ for more engaging online meetings &nbsp;•&nbsp; epic-poll 2024
-      &nbsp;·&nbsp; <a href="admin.html">Admin panel</a>
   </footer>
 </div>
 
@@ -458,6 +452,8 @@
   💬 Q&amp;A <span class="badge badge-purple" id="p-qa-toggle-count">0</span>
 </button>
 
-<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="public-polls.js"></script>
 </body>
 </html>

@@ -11,15 +11,13 @@
   <section id="admin-auth-screen" class="admin-auth-screen">
     <form id="admin-auth-form" class="glass-card admin-auth-card">
       <a class="admin-brand" href="index.html"><img src="logo.png" alt="" /> epic-poll <span>ADMIN</span></a>
-      <div class="admin-eyebrow" id="admin-auth-mode">Admin sign in</div>
-      <h1 id="admin-auth-title">Unlock admin panel</h1>
-      <p id="admin-auth-description">Enter your admin password to continue.</p>
+      <div class="admin-eyebrow">Supabase admin account</div>
+      <h1>Admin sign in</h1>
+      <p>Sign in with the admin user created in your Supabase dashboard.</p>
+      <label class="input-label" for="admin-auth-email">Email</label>
+      <input id="admin-auth-email" class="input" type="email" autocomplete="username" required />
       <label class="input-label" for="admin-auth-password">Password</label>
       <input id="admin-auth-password" class="input" type="password" autocomplete="current-password" required />
-      <div id="admin-auth-confirm-wrap" class="hidden">
-        <label class="input-label" for="admin-auth-confirm">Confirm password</label>
-        <input id="admin-auth-confirm" class="input" type="password" autocomplete="new-password" />
-      </div>
       <div id="admin-auth-error" class="admin-auth-error" role="alert"></div>
       <button id="admin-auth-submit" class="btn btn-primary w-full" type="submit">Sign in</button>
       <a class="admin-auth-home" href="index.html">Back to website</a>
@@ -36,18 +34,22 @@
     <section class="admin-intro">
       <div class="admin-eyebrow">Control center</div>
       <h1>Poll administration</h1>
-      <p>Open a session from this browser to control its polls and review results.</p>
+      <p>Create a public poll, publish it on the homepage, and watch responses update live.</p>
     </section>
 
     <section class="glass-card admin-session-picker">
-      <div class="admin-picker-copy"><strong>Choose a session</strong><span>Sessions are stored in this browser.</span></div>
-      <select id="admin-session-select" class="input" aria-label="Choose session"><option value="">Select a saved session</option></select>
+      <div class="admin-picker-copy"><strong>Your polls</strong><span>Polls sync to Supabase for every visitor.</span></div>
+      <select id="admin-session-select" class="input" aria-label="Choose poll"><option value="">Select a poll</option></select>
     </section>
 
     <section id="admin-workspace" class="admin-workspace hidden">
       <div class="admin-session-heading glass-card">
-        <div><div class="admin-eyebrow">Current session</div><h2 id="admin-session-name">Session</h2><div class="admin-session-meta"><span class="admin-status-dot" id="admin-status-dot"></span><span id="admin-status-text">No poll live</span></div></div>
+        <div><div class="admin-eyebrow">Selected poll</div><h2 id="admin-session-name">Poll results</h2><div class="admin-session-meta"><span class="admin-status-dot" id="admin-status-dot"></span><span id="admin-status-text">No poll selected</span></div></div>
         <button id="admin-export-btn" class="btn btn-secondary btn-sm">↓ Export results</button>
+      </div>
+      <div id="admin-share-box" class="glass-card admin-share-box hidden">
+        <div><strong>Student poll link</strong><span>Share this unique URL with participants.</span></div>
+        <div class="admin-share-row"><input id="admin-share-url" class="input" readonly /><button id="admin-copy-share" class="btn btn-primary btn-sm">Copy link</button></div>
       </div>
       <div class="admin-session-controls">
         <section class="glass-card admin-activity-card">
@@ -56,6 +58,8 @@
           <form id="admin-add-form" class="admin-add-form hidden">
             <label class="input-label" for="admin-question">Poll question</label>
             <input id="admin-question" class="input" maxlength="200" required placeholder="What would you like to ask?" />
+            <label class="input-label" for="admin-poll-type">Activity type</label>
+            <select id="admin-poll-type" class="input"><option value="mc">Multiple choice</option><option value="oe">Open ended</option><option value="wc">Word cloud</option></select>
             <label class="input-label" for="admin-options">Answer options <span>(one per line)</span></label>
             <textarea id="admin-options" class="input" rows="4" required placeholder="Option A&#10;Option B"></textarea>
             <div class="admin-form-actions"><button id="admin-cancel-add" type="button" class="btn btn-ghost btn-sm">Cancel</button><button class="btn btn-primary btn-sm" type="submit">Create poll</button></div>
@@ -67,10 +71,11 @@
         </section>
       </div>
     </section>
-    <div id="admin-empty" class="glass-card admin-empty admin-empty-main">No saved sessions found. Create a session on the main website first, then return here.</div>
     <div id="admin-toast" class="admin-toast" role="status"></div>
   </main>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>
